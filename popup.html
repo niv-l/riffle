@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riffle Settings</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Riffle Settings</h1>
+
+        <fieldset>
+            <legend>Appearance</legend>
+            <div class="setting">
+                <label for="theme-select">Theme:</label>
+                <div class="radio-group" id="theme-select">
+                    <label>
+                        <input type="radio" name="theme" value="system" checked> System
+                    </label>
+                    <label>
+                        <input type="radio" name="theme" value="light"> Light
+                    </label>
+                    <label>
+                        <input type="radio" name="theme" value="dark"> Dark
+                    </label>
+                </div>
+            </div>
+            <div class="setting range-setting">
+                <label for="fontSize">Font Size:</label>
+                <div class="range-wrap">
+                    <input type="range" id="fontSize" name="fontSize" min="12" max="20" step="1">
+                    <span id="fontSizeValue">15px</span>
+                </div>
+            </div>
+        </fieldset>
+
+        <fieldset>
+            <legend>Behavior</legend>
+             <div class="setting checkbox-setting">
+                <label for="focusSearch">Auto-focus search on open:</label>
+                <input type="checkbox" id="focusSearch" name="focusSearch" checked>
+            </div>
+             <p class="shortcut-info">Toggle outline: <code>Ctrl+Shift+Space</code></p>
+        </fieldset>
+
+        <fieldset class="css-fieldset">
+            <legend>Custom CSS</legend>
+            <textarea id="customCSS" name="customCSS" rows="6" spellcheck="false" placeholder="#quick-outline-container { /* Your styles here */ }"></textarea>
+            <button id="saveCssButton" class="save-button">Apply CSS</button>
+            <p class="css-note">Targets the main container: <code>#quick-outline-container</code></p>
+        </fieldset>
+
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>

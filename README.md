@@ -16,7 +16,7 @@
 Install Riffle from the Chrome Web Store (I will be updating this with a link shortly) or follow these steps to load the unpacked extension:
 
 1.  Download or clone this repository.
-2.  Open Chrome/Chromium and navigate to `chrome://extensions`.
+2.  Open a Chromium Based Browser (Chrome, Brave, Vivaldi, etc.) and navigate to `chrome://extensions`.
 3.  Enable "Developer mode" using the toggle switch (usually in the top right).
 4.  Click "Load unpacked" and select the directory containing the extension's files (including `manifest.json`).
 

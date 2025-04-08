@@ -1,0 +1,219 @@
+:root {
+    --popup-bg: #f8f9fa;
+    --popup-text: #212529;
+    --popup-border: #dee2e6;
+    --popup-accent: #964ac2;
+    --popup-fieldset-bg: #ffffff;
+    --popup-code-bg: #e9ecef;
+    --popup-input-bg: #ffffff;
+    --popup-input-border: #ced4da;
+    --popup-button-bg: #e9ecef;
+    --popup-button-hover-bg: #dfe3e7;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --popup-bg: #0F111A;
+        --popup-text: #c9d1d9;
+        --popup-border: #4a4a4f;
+        --popup-accent: #BD5656;
+        --popup-fieldset-bg: #131721;
+        --popup-code-bg: #2d333b;
+        --popup-input-bg: #0a0c12;
+        --popup-input-border: #5a5a5f;
+        --popup-button-bg: #2d333b;
+        --popup-button-hover-bg: #3a4048;
+    }
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    font-size: 14px;
+    margin: 0;
+    padding: 15px;
+    min-width: 320px;
+    background-color: var(--popup-bg);
+    color: var(--popup-text);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+h1 {
+    font-size: 1.2em;
+    margin: 0 0 5px 0;
+    color: var(--popup-accent);
+    text-align: center;
+    font-weight: 600;
+}
+
+fieldset {
+    border: 1px solid var(--popup-border);
+    border-radius: 6px;
+    padding: 10px 15px 15px 15px;
+    margin: 0;
+    background-color: var(--popup-fieldset-bg);
+    display: flex;
+    flex-direction: column;
+    gap: 12px; /* Added gap between settings within a fieldset */
+}
+
+legend {
+    font-weight: 600;
+    padding: 0 5px;
+    color: var(--popup-text);
+    font-size: 0.95em;
+}
+
+.setting {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    /* margin-top: 10px; */ /* Replaced by fieldset gap */
+    min-height: 24px; /* Ensure consistent height */
+}
+
+label {
+    cursor: pointer;
+    user-select: none;
+    padding-right: 10px; /* Space between label and control */
+}
+
+/* Radio/Checkbox controls */
+.radio-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap; /* Allow wrapping */
+}
+
+.radio-group label,
+.checkbox-setting label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: normal; /* Override potential bolding */
+    padding-right: 0; /* Remove padding for inline labels */
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+    accent-color: var(--popup-accent);
+    cursor: pointer;
+    margin: 0; /* Reset margin */
+}
+.checkbox-setting input[type="checkbox"] {
+     width: 16px; /* Explicit size */
+     height: 16px;
+}
+
+/* Range Slider */
+.range-setting {
+    align-items: center;
+}
+.range-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-grow: 1; /* Allow range slider to take space */
+    justify-content: flex-end; /* Align slider/value to the right */
+}
+input[type="range"] {
+    flex-grow: 1; /* Make slider fill available space */
+    max-width: 150px; /* Limit max width */
+    cursor: pointer;
+    accent-color: var(--popup-accent); /* Style the thumb/track */
+    height: 5px;
+    background: var(--popup-input-border); /* Track background */
+    border-radius: 5px;
+    appearance: none; /* Override default look */
+    -webkit-appearance: none;
+}
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    background: var(--popup-accent); /* Thumb color */
+    border-radius: 50%;
+    cursor: pointer;
+}
+input[type="range"]::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    background: var(--popup-accent); /* Thumb color */
+    border-radius: 50%;
+    cursor: pointer;
+    border: none; /* Remove default border */
+}
+#fontSizeValue {
+    font-size: 0.9em;
+    min-width: 35px; /* Prevent width changes */
+    text-align: right;
+    color: var(--popup-text);
+    opacity: 0.9;
+}
+
+/* Custom CSS Textarea */
+.css-fieldset {
+    gap: 8px; /* Smaller gap for CSS area */
+}
+textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--popup-input-border);
+    border-radius: 4px;
+    padding: 8px;
+    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    font-size: 13px;
+    background-color: var(--popup-input-bg);
+    color: var(--popup-text);
+    resize: vertical; /* Allow vertical resize */
+    min-height: 80px;
+}
+textarea:focus {
+    outline: none;
+    border-color: var(--popup-accent);
+    box-shadow: 0 0 0 2px rgba(var(--popup-accent), 0.2); /* Subtle focus ring */
+}
+.save-button {
+    align-self: flex-end; /* Position button to the right */
+    padding: 5px 12px;
+    border: 1px solid var(--popup-input-border);
+    border-radius: 4px;
+    background-color: var(--popup-button-bg);
+    color: var(--popup-text);
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.15s ease;
+}
+.save-button:hover {
+    background-color: var(--popup-button-hover-bg);
+}
+.save-button:active {
+    background-color: var(--popup-input-border);
+}
+
+.css-note {
+    font-size: 0.85em;
+    text-align: center;
+    margin: 0;
+    opacity: 0.7;
+}
+
+/* Shortcut Info */
+.shortcut-info {
+    font-size: 0.9em;
+    text-align: center;
+    margin: 5px 0 0 0; /* Adjusted margin */
+    opacity: 0.8;
+}
+
+code {
+    background-color: var(--popup-code-bg);
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+}
