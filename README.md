@@ -1,5 +1,5 @@
 
-<p align="center"><img width="300" alt="The Riffle logo on a dark gray background. On the left is an icon composed of six stacked, horizontal bars with rounded corners; the top bar is thickest and a dark mauve-red color, while the five bars below it are thinner and show a gradient fading to a lighter mauve-pink at the bottom. To the right of the icon is the word 'riffle' in lowercase, using a thin, sans-serif font in the same dark mauve-red color as the top bar." src="https://niv.s-ul.eu/gbQ6Dkoy"></p>
+<p align="center"><img width="300" alt="The Riffle logo on a dark gray background. On the left is an icon composed of six stacked, horizontal bars with rounded corners; the top bar is thickest and a dark mauve-red color, while the five bars below it are thinner and show a gradient fading to a lighter mauve-pink at the bottom. To the right of the icon is the word 'riffle' in lowercase, using a thin, sans-serif font in the same dark mauve-red color as the top bar." src="https://niv.s-ul.eu/qWHNrF3U"></p>
 <p align="center">Riffle is a browser extension that generates a searchable, keyboard-navigable outline derived from the page's heading elements. </p>
 
 ## Features
