@@ -1,0 +1,209 @@
+@keyframes quickOutlineFadeOut {
+    from { background-color: var(--qo-highlight-bg, #cfe2ff); }
+    to { background-color: transparent; }
+}
+.quick-outline-highlight {
+    background-color: var(--qo-highlight-bg, #cfe2ff) !important;
+    transition: background-color 0.5s ease-out 0.7s;
+    scroll-margin-top: 80px;
+}
+:root {
+   --qo-highlight-bg: #ad97cc;
+   --qo-bg-color: #ffffff;
+   --qo-text-color: #212529;
+   --qo-border-color: #dee2e6;
+   --qo-input-bg: #ffffff;
+   --qo-input-border: #ced4da;
+   --qo-item-hover-bg: #f8f9fa;
+   --qo-item-selected-bg: #e9ecef;
+   --qo-item-selected-text: #000;
+   --qo-toggle-color: #6c757d;
+   --qo-toggle-hover-color: #343a40;
+   --qo-number-color: #adb5bd;
+   --qo-scrollbar-thumb: #adb5bd;
+   --qo-scrollbar-track: #f1f3f5;
+   --qo-shadow-color: rgba(0, 0, 0, 0.1);
+   --qo-search-match-bg: #cdd6ff;
+   --qo-selection-indicator-color: #964ac2;
+}
+@media (prefers-color-scheme: dark) {
+   :root {
+     --qo-highlight-bg: #8d77bd;
+     --qo-bg-color: #0a0c12;
+     --qo-text-color: #788C9E;
+     --qo-border-color: #4a4a4f;
+     --qo-input-bg: #0F111A;
+     --qo-input-border: #5a5a5f;
+     --qo-item-hover-bg: #131721;
+     --qo-item-selected-bg: #131721;
+     --qo-item-selected-text: #BD5656;
+     --qo-toggle-color: #a0a0a5;
+     --qo-toggle-hover-color: #e4e6eb;
+     --qo-number-color: #8e8e93;
+     --qo-scrollbar-thumb: #5a5a5f;
+     --qo-scrollbar-track: #3a3a3c;
+     --qo-shadow-color: rgba(0, 0, 0, 0.4);
+     --qo-search-match-bg: #4a2323;
+     --qo-selection-indicator-color: #BD5656;
+   }
+}
+#quick-outline-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 550px;
+  max-height: 75vh;
+  background-color: var(--qo-bg-color);
+  color: var(--qo-text-color);
+  border: 0px solid var(--qo-border-color);
+  border-radius: 8px;
+  box-shadow: 0 10px 30px var(--qo-shadow-color);
+  z-index: 2147483647;
+  display: flex;
+  flex-direction: column;
+  font-family: "JetBrainsMono NF", "JetBrains Mono", Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 15px;
+  overflow: hidden;
+}
+#quick-outline-container input[type="search"] {
+  padding: 12px 16px;
+  border: none;
+  font-size: 1em;
+  font-family: inherit;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: var(--qo-input-bg);
+  color: var(--qo-text-color);
+  flex-shrink: 0;
+}
+#quick-outline-container input[type="search"]::placeholder {
+  color: var(--qo-number-color);
+  opacity: 0.7;
+}
+#quick-outline-container input[type="search"]::-webkit-search-cancel-button,
+#quick-outline-container input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+    appearance: none;
+}
+#quick-outline-container .outline-list-container {
+  overflow-y: auto;
+  flex-grow: 1;
+  padding: 5px 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--qo-scrollbar-thumb) var(--qo-scrollbar-track);
+}
+#quick-outline-container .outline-list-container::-webkit-scrollbar { width: 8px; }
+#quick-outline-container .outline-list-container::-webkit-scrollbar-track { background: var(--qo-scrollbar-track); }
+#quick-outline-container .outline-list-container::-webkit-scrollbar-thumb { background-color: var(--qo-scrollbar-thumb); border-radius: 4px; border: 2px solid var(--qo-scrollbar-track); }
+#quick-outline-container ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+#quick-outline-container li {
+  position: relative;
+  cursor: pointer;
+  margin: 0;
+}
+.outline-item-wrapper {
+    display: flex;
+    align-items: center;
+    padding: 5px 10px 5px 5px;
+    border-radius: 4px;
+    margin: 1px 5px 1px 0;
+    transition: background-color 0.15s ease;
+    min-height: 24px;
+}
+#quick-outline-container li:hover > .outline-item-wrapper {
+  background-color: var(--qo-item-hover-bg);
+}
+#quick-outline-container li.selected > .outline-item-wrapper {
+  background-color: var(--qo-item-selected-bg);
+}
+#quick-outline-container li.selected > .outline-item-wrapper .outline-item-content,
+#quick-outline-container li.selected > .outline-item-wrapper .outline-item-content .outline-item-number,
+#quick-outline-container li.selected > .outline-item-wrapper .toggle::before
+ {
+  color: var(--qo-item-selected-text);
+  border-color: transparent transparent transparent var(--qo-item-selected-text);
+}
+#quick-outline-container li.selected::before {
+    content: '';
+    position: absolute;
+    left: 2px;
+    top: 4px;
+    bottom: 4px;
+    width: 3px;
+    background-color: var(--qo-selection-indicator-color);
+    border-radius: 1.5px;
+}
+.outline-item-content {
+  display: flex;
+  align-items: baseline;
+  flex-grow: 1;
+  overflow: hidden;
+  margin-left: 4px;
+}
+.outline-item-number {
+  color: var(--qo-number-color);
+  font-size: 0.85em;
+  margin-right: 8px;
+  text-align: right;
+  flex-shrink: 0;
+  opacity: 0.8;
+  user-select: none;
+}
+.outline-item-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex-grow: 1;
+}
+#quick-outline-container li.search-match > .outline-item-wrapper {
+     background-color: var(--qo-search-match-bg);
+}
+#quick-outline-container li.selected.search-match > .outline-item-wrapper {
+     background-color: var(--qo-item-selected-bg);
+}
+.toggle, .toggle-placeholder {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  margin-right: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--qo-toggle-color);
+  transition: transform 0.2s ease-in-out, color 0.15s ease;
+  position: relative;
+  user-select: none;
+}
+.toggle {
+  cursor: pointer;
+}
+.toggle:hover {
+  color: var(--qo-toggle-hover-color);
+}
+.toggle:hover::before {
+   border-color: transparent transparent transparent var(--qo-toggle-hover-color);
+}
+.toggle::before {
+    content: '';
+    display: block;
+    width: 0;
+    height: 0;
+    transition: transform 0.2s ease-in-out, border-color 0.15s ease;
+    border-style: solid;
+    border-width: 5px 0 5px 6px;
+    border-color: transparent transparent transparent var(--qo-toggle-color);
+    transform-origin: 3px 5px;
+}
+li.expanded > .outline-item-wrapper > .toggle::before {
+  transform: rotate(90deg);
+}
+li.collapsed > .outline-item-wrapper > .toggle::before {
+  transform: rotate(0deg);
+}
