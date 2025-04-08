@@ -1,0 +1,22 @@
+{
+  "manifest_version": 3,
+  "name": "Riffle",
+  "version": "1.0",
+  "description": "Shows a searchable, keyboard-navigable outline of the current page.",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "toggle-outline": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+O",
+        "mac": "MacCtrl+Shift+O"
+      },
+      "description": "Toggle Page Outline"
+    }
+  }
+}
