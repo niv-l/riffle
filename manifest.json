@@ -5,7 +5,8 @@
   "description": "Shows a searchable, keyboard-navigable outline of the current page.",
   "permissions": [
     "activeTab",
-    "scripting"
+    "scripting",
+    "storage"
   ],
   "background": {
     "service_worker": "background.js"
@@ -21,5 +22,8 @@
       },
       "description": "Toggle Page Outline"
     }
+  },
+  "action": {
+    "default_popup": "popup.html"
   }
 }

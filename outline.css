@@ -7,7 +7,8 @@
     transition: background-color 0.5s ease-out 0.7s;
     scroll-margin-top: 80px;
 }
-:root {
+/* Default Light Theme Variables */
+:root, #quick-outline-container.force-light {
    --qo-highlight-bg: #ad97cc;
    --qo-bg-color: #ffffff;
    --qo-text-color: #212529;
@@ -26,8 +27,9 @@
    --qo-search-match-bg: #cdd6ff;
    --qo-selection-indicator-color: #964ac2;
 }
-@media (prefers-color-scheme: dark) {
-   :root {
+/* Dark Theme Variables (System Preference or Forced) */
+/* Apply if system prefers dark AND light theme isn't forced */
+@media (prefers-color-scheme: dark) { :root:not(.force-light) {
      --qo-highlight-bg: #8d77bd;
      --qo-bg-color: #0a0c12;
      --qo-text-color: #788C9E;
@@ -45,7 +47,27 @@
      --qo-shadow-color: rgba(0, 0, 0, 0.4);
      --qo-search-match-bg: #4a2323;
      --qo-selection-indicator-color: #BD5656;
-   }
+} }
+
+/* Apply if dark theme IS forced, overriding system pref */
+#quick-outline-container.force-dark {
+  --qo-highlight-bg: #8d77bd;
+  --qo-bg-color: #0a0c12;
+  --qo-text-color: #788C9E;
+  --qo-border-color: #4a4a4f;
+  --qo-input-bg: #0F111A;
+  --qo-input-border: #5a5a5f;
+  --qo-item-hover-bg: #131721;
+  --qo-item-selected-bg: #131721;
+  --qo-item-selected-text: #BD5656;
+  --qo-toggle-color: #a0a0a5;
+  --qo-toggle-hover-color: #e4e6eb;
+  --qo-number-color: #8e8e93;
+  --qo-scrollbar-thumb: #0F111A;
+  --qo-scrollbar-track: #3a3a3c;
+  --qo-shadow-color: rgba(0, 0, 0, 0.4);
+  --qo-search-match-bg: #4a2323;
+  --qo-selection-indicator-color: #BD5656;
 }
 #quick-outline-container {
   position: fixed;

@@ -10,6 +10,14 @@
     let tempIdCounter = 0;
     let isGloballyCollapsed = false;
 
+    // --- Settings Variables ---
+    let currentTheme = 'system';
+    let currentFontSize = 15; // Default
+    let currentFocusSearchPref = true; // Default
+    let customStyleElement = null;
+    const CUSTOM_STYLE_ID = 'quick-outline-custom-styles';
+
+    // --- Constants ---
     const OUTLINE_ID_PREFIX = 'quick-outline-item-';
     const HEADING_ID_PREFIX = 'quick-outline-heading-';
     const CONTAINER_ID = 'quick-outline-container';
@@ -77,7 +85,7 @@
         });
     }
 
-    function createOutlineUI(treeData) {
+    async function createOutlineUI(treeData) {
         removeOutlineUI();
 
         outlineContainer = document.createElement('div');
@@ -105,25 +113,95 @@
         listContainer.appendChild(listElement);
         outlineContainer.appendChild(searchInput);
         outlineContainer.appendChild(listContainer);
-        document.body.appendChild(outlineContainer);
 
         outlineVisible = true;
         selectedOutlineId = null;
         isGloballyCollapsed = false;
 
-        applyCollapseState(false, false);
+        try {
+            await loadAndApplySettings(); // Load theme, font size, custom css etc.
+            document.body.appendChild(outlineContainer);
+            applyInitialUIState(); // Apply collapse, selection, and focus
+        } catch (error) {
+            console.error("Riffle: Error applying settings:", error);
+             // Fallback: Append and apply defaults if settings load fails
+             if (!outlineContainer.parentNode) {
+                 document.body.appendChild(outlineContainer);
+             }
+            applyInitialUIState();
+        }
 
+        // Add global listeners
+        document.addEventListener('keydown', handleGlobalKeydown, true);
+        document.addEventListener('mousedown', handleOutsideClick, true);
+        chrome.storage.onChanged.addListener(handleStorageChange);
+    }
+
+    async function loadAndApplySettings() {
+        const settingsToLoad = ['theme', 'fontSize', 'focusSearch', 'customCSS'];
+        const result = await chrome.storage.sync.get(settingsToLoad);
+
+        // Theme
+        currentTheme = result.theme || 'system';
+        applyThemeClass(currentTheme);
+
+        // Font Size
+        currentFontSize = result.fontSize || 15;
+        applyFontSize(currentFontSize);
+
+        // Focus Preference (used later in applyInitialUIState)
+        currentFocusSearchPref = result.focusSearch === undefined ? true : result.focusSearch;
+
+        // Custom CSS
+        applyCustomCSS(result.customCSS || '');
+    }
+
+    function applyInitialUIState() {
+         // Apply initial collapse state (expand all by default)
+        applyCollapseState(false, false); // Don't refocus search here
+
+        // Select the first visible item
         const firstVisibleItem = getVisibleItems()[0];
         if (firstVisibleItem) {
             updateSelection(firstVisibleItem.dataset.outlineId, 'instant');
         } else {
-            updateSelection(null);
+            updateSelection(null); // No items visible
         }
 
-        setTimeout(() => searchInput.focus(), 50);
+        // Focus search input based on preference, after a short delay
+        if (currentFocusSearchPref && searchInput) {
+            setTimeout(() => searchInput.focus(), 50);
+        }
+    }
 
-        document.addEventListener('keydown', handleGlobalKeydown, true);
-        document.addEventListener('mousedown', handleOutsideClick, true);
+    function applyThemeClass(theme) {
+        if (!outlineContainer) return;
+        outlineContainer.classList.remove('force-light', 'force-dark');
+        if (theme === 'light') {
+            outlineContainer.classList.add('force-light');
+        } else if (theme === 'dark') {
+            outlineContainer.classList.add('force-dark');
+        }
+    }
+
+    function applyFontSize(size) {
+        if (!outlineContainer) return;
+        outlineContainer.style.fontSize = `${size}px`;
+    }
+
+    function applyCustomCSS(css) {
+        // Remove existing style element if it exists
+        if (customStyleElement && customStyleElement.parentNode) {
+            customStyleElement.remove();
+        }
+        customStyleElement = null; // Reset reference
+
+        if (css && typeof css === 'string' && css.trim() !== '') {
+            customStyleElement = document.createElement('style');
+            customStyleElement.id = CUSTOM_STYLE_ID;
+            customStyleElement.textContent = css;
+            document.head.appendChild(customStyleElement);
+        }
     }
 
      function handleOutsideClick(event) {
@@ -192,20 +270,30 @@
 
     function removeOutlineUI() {
         document.removeEventListener('keydown', handleGlobalKeydown, true);
+        chrome.storage.onChanged.removeListener(handleStorageChange);
         document.removeEventListener('mousedown', handleOutsideClick, true);
 
         if (outlineContainer) {
             outlineContainer.remove();
         }
+        if (customStyleElement && customStyleElement.parentNode) {
+             customStyleElement.remove(); // Remove custom CSS tag
+        }
+
         outlineContainer = null;
         searchInput = null;
         listElement = null;
+        customStyleElement = null;
         listItemsMap.clear();
         flatListNodes = [];
-        headingTree = []; // Keep resetting headingTree if UI is removed
+        headingTree = [];
         outlineVisible = false;
         selectedOutlineId = null;
         isGloballyCollapsed = false;
+        // Reset settings variables to defaults
+        currentTheme = 'system';
+        currentFontSize = 15;
+        currentFocusSearchPref = true;
     }
 
     function scrollToHeading(targetId) {
@@ -250,27 +338,27 @@
         if (!item || !item.element || !item.nodeData) return;
 
         const isHiddenByCollapse = isElementHiddenByAncestorCollapse(item.element);
-        item.element.style.display = isHiddenByCollapse ? 'none' : '';
+        let shouldBeVisible = !isHiddenByCollapse;
 
         const currentSearchQuery = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
-        if (currentSearchQuery !== '') {
-            if (!isHiddenByCollapse) {
-                const matchesSearch = item.element.classList.contains('search-match');
-                const isRevealedParent = item.element.classList.contains('search-reveal-parent');
-
-                if (!matchesSearch && !isRevealedParent) {
-                    item.element.style.display = 'none';
-                    item.element.classList.add('search-hidden');
-                } else {
-                    item.element.style.display = '';
-                    item.element.classList.remove('search-hidden');
-                }
-            } else {
+        if (shouldBeVisible && currentSearchQuery !== '') {
+            const isDirectMatch = item.element.classList.contains('search-match');
+            const isRevealedParent = item.element.classList.contains('search-reveal-parent');
+            if (!isDirectMatch && !isRevealedParent) {
+                shouldBeVisible = false;
                 item.element.classList.add('search-hidden');
+            } else {
+                item.element.classList.remove('search-hidden');
             }
         } else {
-             item.element.classList.remove('search-hidden', 'search-reveal-parent', 'search-match');
+            item.element.classList.remove('search-hidden');
+        }
+
+        item.element.style.display = shouldBeVisible ? '' : 'none';
+
+        if (currentSearchQuery === '') {
+            item.element.classList.remove('search-reveal-parent', 'search-match');
         }
     }
 
@@ -278,14 +366,11 @@
         const query = searchInput.value.toLowerCase().trim();
         let firstVisibleMatchId = null;
 
-        listItemsMap.forEach(({ element }) => {
+        listItemsMap.forEach(({ element, nodeData }) => {
             element.classList.remove('search-match', 'search-hidden', 'search-reveal-parent');
             if (element.classList.contains('collapsible')) {
-                const nodeData = listItemsMap.get(element.dataset.outlineId)?.nodeData;
-                if (nodeData) {
-                    element.classList.toggle('collapsed', nodeData.collapsed);
-                    element.classList.toggle('expanded', !nodeData.collapsed);
-                }
+                 element.classList.toggle('collapsed', nodeData.collapsed);
+                 element.classList.toggle('expanded', !nodeData.collapsed);
             }
         });
 
@@ -390,7 +475,9 @@
         if (!outlineVisible) return;
 
          const activeEl = document.activeElement;
-         const isOtherInputFocused = activeEl && (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable) && activeEl !== searchInput;
+         const isOtherInputFocused = activeEl &&
+                                   (activeEl.tagName === 'INPUT' || activeEl.tagName === 'TEXTAREA' || activeEl.isContentEditable) &&
+                                   activeEl !== searchInput;
 
          if (event.key === '/' && !isOtherInputFocused) {
             event.preventDefault();
@@ -475,7 +562,10 @@
     }
 
     function getVisibleItems() {
-         return Array.from(listElement?.children || []).filter(li => {
+         if (!listElement) {
+             return [];
+         }
+         return Array.from(listElement.children).filter(li => {
              if (li.style.display === 'none') {
                  return false;
              }
@@ -613,7 +703,9 @@
              updateItemVisibility(currentNodeData.id);
 
              if (currentNodeData.children.length > 0) {
-                 queue.push(...currentNodeData.children);
+                 if (!isCollapsing && !currentNodeData.collapsed || isCollapsing) {
+                     queue.push(...currentNodeData.children);
+                 }
              }
         }
     }
@@ -664,23 +756,77 @@
          }
     }
 
+    function handleStorageChange(changes, areaName) {
+        if (areaName !== 'sync' || !outlineVisible) {
+            return; // Ignore if not sync storage or outline isn't open
+        }
+
+        if (changes.theme) {
+            const newTheme = changes.theme.newValue || 'system';
+            if (newTheme !== currentTheme) {
+                currentTheme = newTheme;
+                applyThemeClass(currentTheme);
+                console.log("Riffle: Theme updated to", currentTheme);
+            }
+        }
+
+        if (changes.fontSize) {
+            const newSize = changes.fontSize.newValue || 15;
+            if (newSize !== currentFontSize) {
+                currentFontSize = newSize;
+                applyFontSize(currentFontSize);
+                console.log("Riffle: Font size updated to", currentFontSize);
+            }
+        }
+
+         if (changes.customCSS) {
+            const newCSS = changes.customCSS.newValue || '';
+            // Check if CSS actually changed before reapplying
+            if (!customStyleElement || newCSS !== customStyleElement.textContent) {
+                 applyCustomCSS(newCSS);
+                 console.log("Riffle: Custom CSS updated.");
+            }
+        }
+
+        if (changes.focusSearch) {
+            // Update preference, but doesn't change focus state dynamically
+            currentFocusSearchPref = changes.focusSearch.newValue === undefined ? true : changes.focusSearch.newValue;
+            console.log("Riffle: Focus search preference updated to", currentFocusSearchPref);
+        }
+    }
 
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         if (request.action === "toggleOutline") {
             if (outlineVisible) {
                 removeOutlineUI();
+                sendResponse({ status: "closed", visible: false });
             } else {
                 headingTree = generateOutlineTree();
                 if (headingTree.length > 0) {
-                    createOutlineUI(headingTree);
+                    // createOutlineUI is now async
+                    createOutlineUI(headingTree)
+                        .then(() => {
+                            sendResponse({ status: "opened", visible: true });
+                        })
+                        .catch(error => {
+                            console.error("Riffle: Failed to create outline UI", error);
+                            sendResponse({ status: "error", visible: false, message: error.message });
+                        });
+                    return true; // Indicate async response for createOutlineUI
                 } else {
-                  console.warn("Riffle: Could not find any headlines.", e)
+                  console.warn("Riffle: No heading elements (H1-H6) found on this page.");
+                  sendResponse({ status: "no_headings", visible: false });
                 }
             }
-            sendResponse({ status: "done", visible: outlineVisible });
         } else if (request.action === "ping") {
             sendResponse({ status: "ready" });
+        } else {
+            // Handle unknown messages potentially?
+             sendResponse({ status: "unknown_message" });
         }
+        // Return true ONLY if sendResponse might be called asynchronously (like in the createOutlineUI promise chain)
+        // If sendResponse is called synchronously in all branches, return false or omit the return.
+        // In this updated logic, we need 'true' because of the async createOutlineUI call.
         return true;
     });
 

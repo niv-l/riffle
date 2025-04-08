@@ -1,33 +1,96 @@
-
 <p align="center"><img width="300" alt="The Riffle logo on a dark gray background. On the left is an icon composed of six stacked, horizontal bars with rounded corners; the top bar is thickest and a dark mauve-red color, while the five bars below it are thinner and show a gradient fading to a lighter mauve-pink at the bottom. To the right of the icon is the word 'riffle' in lowercase, using a thin, sans-serif font in the same dark mauve-red color as the top bar." src="https://niv.s-ul.eu/qWHNrF3U"></p>
-<p align="center">Riffle is a browser extension that generates a searchable, keyboard-navigable outline derived from the page's heading elements. </p>
+<p align="center">Riffle is a browser extension that generates a searchable, keyboard-navigable outline derived from the page's heading elements.</p>
 
-## Features
+## Key Features
 
-*   **Dynamic Outline:** Builds a hierarchical outline from visible `H1`-`H6` tags.
-*   **Fuzzy Search:** Filter headings as you type.
-*   **Keyboard-First:** Optimized for keyboard navigation.
-*   **Direct Navigation:** Jump directly to the corresponding heading element on the page.
-*   **Tree Manipulation:** Expand and collapse nested heading levels.
-*   **System Theme:** Adapts to light/dark mode preferences.
-*   **Minimal Footprint:** Clean UI, CSS variables for theming.
-
-## Usage
-
-1.  **Toggle:** `Ctrl+Shift+Space` (Linux / Windows) or `MacCtrl+Shift+Space` (macOS). To set up keybindings navigate to the keyboard shortcuts section of your browser's extension settings (*i.e.* `chrome://extensions`).
-2.  **Navigation:**
-    *   `↑` / `↓`: Select previous/next item.
-    *   `Enter`: Navigate to the selected heading & close panel.
-    *   `Esc`: Close panel.
-3.  **Search:**
-    *   Type to filter.
-    *   `/`: Focus search input.
-4.  **Hierarchy:**
-    *   `→`: Expand node or move to first child.
-    *   `←`: Collapse node or move to parent.
-    *   `Tab`: Toggle global collapse/expand (H1 vs all). Clears search.
-    *   Click toggle icon (▶/▼) to expand/collapse individual nodes.
+*   **Dynamic Outline Generation:** Creates a hierarchical view from visible `H1` through `H6` elements on the current page.
+*   **Instant Fuzzy Search:** Quickly filter the outline by typing any part of a heading's text.
+*   **Keyboard-Centric Navigation:** Designed for efficient use without requiring mouse interaction.
+*   **Direct Page Navigation:** Select an item in the outline to scroll the corresponding heading into view.
+*   **Hierarchical Control:** Expand and collapse individual branches or the entire outline structure.
+*   **Customizable Interface:** Adjust theme (System, Light, Dark), font size, and apply custom CSS rules.
+*   **Minimal Design:** Focuses on functionality with a clean user interface.
 
 ## Installation
 
-Install from the Chrome Web Store (link TBD) or load the unpacked extension.
+Install Riffle from the Chrome Web Store (I will be updating this with a link shortly) or follow these steps to load the unpacked extension:
+
+1.  Download or clone this repository.
+2.  Open Chrome/Chromium and navigate to `chrome://extensions`.
+3.  Enable "Developer mode" using the toggle switch (usually in the top right).
+4.  Click "Load unpacked" and select the directory containing the extension's files (including `manifest.json`).
+
+## Usage
+
+### Activating the Outline Panel
+
+*   Press `Ctrl+Shift+Space` (Linux / Windows) or `MacCtrl+Shift+Space` (macOS).
+*   *Note: You can customize this shortcut via your browser's extension keyboard shortcuts page (e.g., `chrome://extensions/shortcuts`).*
+
+### Configuring Settings
+
+Click the Riffle extension icon in your browser toolbar to access the settings popup, where you can adjust:
+
+*   **Theme:** Choose between System default, Light, or Dark mode overrides.
+*   **Font Size:** Modify the base font size for the outline panel.
+*   **Auto-focus Search:** Determine if the search input should be focused automatically when the panel opens.
+*   **Custom CSS:** Apply user-defined styles (see Customization section).
+
+### Interacting with the Panel
+
+Once the panel is open, use the following keyboard shortcuts:
+
+**Navigation & Selection:**
+*   `↑` / `↓`: Move selection up or down.
+*   `Enter`: Scroll to the selected heading on the page and close the panel.
+*   `Esc`: Close the panel without navigating.
+
+**Search:**
+*   *Start typing*: Instantly filters the outline based on your input.
+*   `/`: Focus the search input field.
+
+**Hierarchy Management:**
+*   `→`: Expand the selected node (if collapsed) or move selection to its first visible child (if expanded).
+*   `←`: Collapse the selected node (if expanded) or move selection to its parent node (if collapsed or a leaf node).
+*   `Tab`: Toggle between showing only top-level headings (H1) and all headings. Clears any active search query.
+*   *Click* `▶`/`▼`: Expand or collapse an individual node with the mouse.
+
+## Customization via CSS
+
+You can further tailor the appearance of the outline panel by adding your own CSS rules in the "Custom CSS" section of the settings popup. These styles are injected dynamically and target the main container element.
+
+**Target Selector:** `#quick-outline-container`
+
+**Example Custom CSS:**
+
+```css
+/* --- Example Riffle Custom CSS --- */
+
+#quick-outline-container {
+  /* Slightly wider panel */
+  max-width: 650px;
+  border: 1px solid var(--qo-border-color);
+}
+
+/* Change selection background and indicator color */
+#quick-outline-container li.selected > .outline-item-wrapper {
+  background-color: salmon; /* Salmon background */
+}
+#quick-outline-container li.selected::before {
+    background-color: #ff7a7a; /* Brighter red indicator */
+}
+
+/* Style the heading number differently */
+.outline-item-number {
+  font-weight: bold;
+  opacity: 0.6;
+  min-width: 40px; /* Ensure alignment */
+  margin-right: 12px;
+}
+
+/* Add subtle border to search input */
+#quick-outline-container input[type="search"] {
+    border-bottom: 1px solid var(--qo-border-color);
+}
+
+```
