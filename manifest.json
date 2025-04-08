@@ -16,8 +16,8 @@
   "commands": {
     "toggle-outline": {
       "suggested_key": {
-        "default": "Ctrl+Shift+O",
-        "mac": "MacCtrl+Shift+O"
+        "default": "Ctrl+Shift+Space",
+        "mac": "MacCtrl+Shift+Space"
       },
       "description": "Toggle Page Outline"
     }

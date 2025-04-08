@@ -14,7 +14,7 @@
 
 ## Usage
 
-1.  **Toggle:** `Ctrl+Shift+O` (Windows/Linux) or `MacCtrl+Shift+O` (macOS). To set up keybindings navigate to the keyboard shortcuts section of your browser's extension settings (*i.e.* `chrome://extensions`).
+1.  **Toggle:** `Ctrl+Shift+Space` (Linux / Windows) or `MacCtrl+Shift+Space` (macOS). To set up keybindings navigate to the keyboard shortcuts section of your browser's extension settings (*i.e.* `chrome://extensions`).
 2.  **Navigation:**
     *   `↑` / `↓`: Select previous/next item.
     *   `Enter`: Navigate to the selected heading & close panel.
