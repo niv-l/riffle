@@ -20,6 +20,18 @@ Install Riffle from the Chrome Web Store (I will be updating this with a link sh
 3.  Enable "Developer mode" using the toggle switch (usually in the top right).
 4.  Click "Load unpacked" and select the directory containing the extension's files (including `manifest.json`).
 
+## Screenshots
+### Pop Up
+| Dark Mode                                                                                      | Light Mode                                                                                      |
+| :-------------------------------------------------------------------------------------------: | :-------------------------------------------------------------------------------------------: |
+| <img width="475" src="https://github.com/user-attachments/assets/fc40bacd-42a8-4dc3-aaf3-86260bf6a17b"> | <img width="475" src="https://github.com/user-attachments/assets/e23757e1-d000-4b0a-b207-38feb6257b1c"> |
+| <img width="475" src="https://github.com/user-attachments/assets/770d12e8-8f05-4bcb-a336-22a4913545e0"> | <img width="475" src="https://github.com/user-attachments/assets/2e15ae58-8c02-48ac-9764-3747766e9613"> |
+
+### Settings Menu
+<p align="center">
+  <img width="350" src="https://github.com/user-attachments/assets/91d3effe-4a84-4e28-88a7-6cb8ec4e673d">
+</p>
+
 ## Usage
 
 ### Activating the Outline Panel
@@ -94,3 +106,5 @@ You can further tailor the appearance of the outline panel by adding your own CS
 }
 
 ```
+
+
