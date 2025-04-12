@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Riffle",
+  "name": "Riffle - TOC / Outline for Any Page",
   "version": "1.0",
   "description": "Shows a searchable, keyboard-navigable outline of the current page.",
   "permissions": [
