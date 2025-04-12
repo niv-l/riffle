@@ -4,7 +4,7 @@
 ## Key Features
 
 *   **Dynamic Outline Generation:** Creates a hierarchical view from visible `H1` through `H6` elements on the current page.
-*   **Instant Fuzzy Search:** Quickly filter the outline by typing any part of a heading's text.
+*   **Instant Search:** Quickly filter the outline by typing any part of a heading's text.
 *   **Keyboard-Centric Navigation:** Designed for efficient use without requiring mouse interaction.
 *   **Direct Page Navigation:** Select an item in the outline to scroll the corresponding heading into view.
 *   **Hierarchical Control:** Expand and collapse individual branches or the entire outline structure.
