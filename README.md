@@ -9,6 +9,7 @@
 *   **Direct Page Navigation:** Select an item in the outline to scroll the corresponding heading into view.
 *   **Hierarchical Control:** Expand and collapse individual branches or the entire outline structure.
 *   **Customizable Interface:** Adjust theme (System, Light, Dark), font size, and apply custom CSS rules.
+*   **Configurable Scroll Behavior:** Choose between smooth scrolling or instant jumping to headings.
 *   **Minimal Design:** Focuses on functionality with a clean user interface.
 
 ## Installation
