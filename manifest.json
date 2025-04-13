@@ -8,6 +8,11 @@
     "scripting",
     "storage"
   ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "mail@nivyan.xyz"
+    }
+  },
   "background": {
     "scripts": ["background.js"]
   },
