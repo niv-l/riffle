@@ -3,10 +3,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const fontSizeSlider = document.getElementById('fontSize');
     const fontSizeValueSpan = document.getElementById('fontSizeValue');
     const focusSearchCheckbox = document.getElementById('focusSearch');
+    const scrollBehaviorRadios = document.querySelectorAll('input[name="scrollBehavior"]');
     const customCSSTextarea = document.getElementById('customCSS');
     const saveCssButton = document.getElementById('saveCssButton');
 
-    const settingsToLoad = ['theme', 'fontSize', 'focusSearch', 'customCSS'];
+    const settingsToLoad = ['theme', 'fontSize', 'focusSearch', 'customCSS', 'scrollBehavior'];
 
     // --- Load saved settings ---
     chrome.storage.sync.get(settingsToLoad, (result) => {
@@ -24,6 +25,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Focus Search
         const savedFocusSearch = result.focusSearch === undefined ? true : result.focusSearch; // Default true
         focusSearchCheckbox.checked = savedFocusSearch;
+
+        // Scroll Behavior
+        const savedScrollBehavior = result.scrollBehavior || 'smooth'; // Default smooth
+        scrollBehaviorRadios.forEach(radio => {
+            radio.checked = (radio.value === savedScrollBehavior);
+        });
 
         // Custom CSS
         customCSSTextarea.value = result.customCSS || '';
@@ -51,6 +58,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Focus Search
     focusSearchCheckbox.addEventListener('change', (event) => {
         chrome.storage.sync.set({ focusSearch: event.target.checked });
+    });
+
+    // Scroll Behavior
+    scrollBehaviorRadios.forEach(radio => {
+        radio.addEventListener('change', (event) => {
+            if (event.target.checked) {
+                chrome.storage.sync.set({ scrollBehavior: event.target.value });
+            }
+        });
     });
 
     // Custom CSS (Save on button click)
