@@ -14,6 +14,7 @@
     let currentTheme = 'system';
     let currentFontSize = 15; // Default
     let currentFocusSearchPref = true; // Default
+    let currentScrollBehavior = 'smooth'; // Default
     let customStyleElement = null;
     const CUSTOM_STYLE_ID = 'quick-outline-custom-styles';
 
@@ -138,7 +139,7 @@
     }
 
     async function loadAndApplySettings() {
-        const settingsToLoad = ['theme', 'fontSize', 'focusSearch', 'customCSS'];
+        const settingsToLoad = ['theme', 'fontSize', 'focusSearch', 'customCSS', 'scrollBehavior'];
         const result = await chrome.storage.sync.get(settingsToLoad);
 
         // Theme
@@ -151,6 +152,10 @@
 
         // Focus Preference (used later in applyInitialUIState)
         currentFocusSearchPref = result.focusSearch === undefined ? true : result.focusSearch;
+
+        // Scroll Behavior
+        currentScrollBehavior = result.scrollBehavior || 'smooth';
+        console.log("Riffle: Scroll behavior set to", currentScrollBehavior);
 
         // Custom CSS
         applyCustomCSS(result.customCSS || '');
@@ -302,7 +307,7 @@
         const targetElement = document.getElementById(targetId);
         if (targetElement) {
             targetElement.scrollIntoView({
-                behavior: 'smooth',
+                behavior: currentScrollBehavior,
                 block: 'center'
             });
             targetElement.classList.add('quick-outline-highlight');
@@ -793,6 +798,15 @@
             currentFocusSearchPref = changes.focusSearch.newValue === undefined ? true : changes.focusSearch.newValue;
             console.log("Riffle: Focus search preference updated to", currentFocusSearchPref);
         }
+
+        if (changes.scrollBehavior) {
+            const newBehavior = changes.scrollBehavior.newValue || 'smooth';
+             if (newBehavior !== currentScrollBehavior) {
+                currentScrollBehavior = newBehavior;
+                console.log("Riffle: Scroll behavior updated to", currentScrollBehavior);
+            }
+        }
+
     }
 
     chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
