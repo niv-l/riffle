@@ -724,6 +724,11 @@
         setDescendantsVisibility(outlineId, true, true);
     }
 
+    function getNumericOutlineId(stringOutlineId) {
+        if (stringOutlineId) {
+            return stringOutlineId.slice(OUTLINE_ID_PREFIX.length);
+        }
+    }
 
      function applyCollapseState(collapseToH1, focusSearchAfter = false) {
         isGloballyCollapsed = collapseToH1;
@@ -749,11 +754,24 @@
             updateItemVisibility(nodeId);
         });
 
-        const firstVisible = getVisibleItems()[0];
-        if (firstVisible) {
-             updateSelection(firstVisible.dataset.outlineId, 'instant');
-        } else {
-             updateSelection(null);
+        // if the item that is currently selected is not visible, select the first visible element above it.
+        const isSelectedVisible = getVisibleItems().findIndex(li => li.dataset.outlineId === selectedOutlineId) === -1
+        if (!isSelectedVisible) {
+            const firstVisibleAbove = Array.from(listElement.children)
+                                           .slice(0, getNumericOutlineId(selectedOutlineId))
+                                           .reverse()
+                                           .find(li => li.checkVisibility());
+            if (firstVisibleAbove) {
+                updateSelection(firstVisibleAbove.dataset.outlineId, 'instant');
+            } else {
+                // fallback to old behaviour
+                const firstVisible = getVisibleItems()[0];
+                if (firstVisible) {
+                        updateSelection(firstVisible.dataset.outlineId, 'instant');
+                } else {
+                        updateSelection(null);
+                }
+            }
         }
 
          if (focusSearchAfter && searchInput) {
