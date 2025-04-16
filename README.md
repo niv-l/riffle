@@ -14,7 +14,7 @@
 
 ## Installation
 
-Install Riffle from the [Chrome Web Store](https://chromewebstore.google.com/detail/riffle-searchable-heading/lbbefaalppcllcdbfddpbfdmakpddcbp) or follow these steps to load the unpacked extension:
+Install Riffle from the [Chrome Web Store](https://chromewebstore.google.com/detail/riffle-searchable-heading/lbbefaalppcllcdbfddpbfdmakpddcbp) or the [Firefox Add-on Store](https://addons.mozilla.org/en-GB/firefox/addon/riffle-searchable-heading/). Alternatively, you can also follow these steps to load the unpacked extension:
 
 1.  Download or clone this repository.
 2.  Open a Chromium Based Browser (Chrome, Brave, Vivaldi, etc.) and navigate to `chrome://extensions`.
